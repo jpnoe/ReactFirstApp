@@ -1,8 +1,21 @@
 import React, { Component } from 'react'
 import Table from './Table'
 import Form from './Form'
+import axios from 'axios'
 
 class App extends Component {
+    componentDidMount() {
+       axios.get('http://localhost:5000/users')
+        .then(res => {
+          const characters = res.data.users_list;
+          this.setState({ characters });
+        })
+        .catch(function (error) {
+      //Not handling the error. Just logging into the console.
+      console.log(error);
+        });
+    }
+    
     state = {
       characters: [],
     }
@@ -17,10 +30,13 @@ class App extends Component {
       })
     }
 
-    handleSubmit = character => {
-      this.setState({ characters: [...this.state.characters, character] })
-    }
-
+   handleSubmit = character => {
+    this.makePostCall(character).then( callResult => {
+      if (callResult === true) {
+         this.setState({ characters: [...this.state.characters, character] });
+      }
+    });
+   }
     render() {
       const { characters } = this.state
 
