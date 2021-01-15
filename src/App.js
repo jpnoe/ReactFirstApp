@@ -32,17 +32,26 @@ class App extends Component {
 
    handleSubmit = character => {
     this.makePostCall(character).then( callResult => {
-      if (callResult === true) {
-         this.setState({ characters: [...this.state.characters, character] });
+      if (callResult !== false) {
+         this.setState({ characters: [...this.state.characters, callResult] });
       }
     });
    }
+
+   handleDelete = (character, index) => {
+    this.makeDeleteCall(character.id).then( callResult => {
+      if (callResult !== false) {
+         this.removeCharacter(index);
+      }
+    });
+   }
+
     render() {
       const { characters } = this.state
 
       return (
         <div className="container">
-          <Table characterData={characters} removeCharacter={this.removeCharacter} />
+          <Table characterData={characters} remove={this.handleDelete} />
           <Form handleSubmit={this.handleSubmit} />
         </div>
       )
@@ -50,14 +59,34 @@ class App extends Component {
 
     makePostCall(character){
         return axios.post('http://localhost:5000/users', character)
-               .then(function (response) {
-                   console.log(response);
-                   return (response.status === 201);
-               })
-               .catch(function (error) {
-                   console.log(error);
-                   return false;
-               });
+                    .then(function (response) {
+                       console.log(response);
+                       if (response.status === 201) {
+                          return response.data;
+                       } else {
+                          return false;
+                       }
+                    })
+                    .catch(function (error) {
+                       console.log(error);
+                       return false;
+                    });
+    }
+
+    makeDeleteCall(id){
+        return axios.delete('http://localhost:5000/users/' + id)
+                    .then(function (response) {
+                       if (response.status === 200) {
+                          console.log(response.data);
+                          return response.data;
+                       } else {
+                          return false;
+                       }
+                    })
+                    .catch(function (error) {
+                       console.log(error);
+                       return false;
+                    });
     }
 }
 

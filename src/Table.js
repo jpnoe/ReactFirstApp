@@ -18,7 +18,7 @@ const TableBody = props => {
         <td>{row.name}</td>
         <td>{row.job}</td>
         <td>
-          <button onClick={() => props.removeCharacter(index)}>Delete</button>
+          <button onClick={() => props.remove(row, index)}>Delete</button>
         </td>
       </tr>)
   })
@@ -27,12 +27,12 @@ const TableBody = props => {
 }
 
 const Table = props => {
-  const { characterData, removeCharacter } = props
+  const { characterData, remove } = props
 
   return (
     <table>
       <TableHeader />
-      <TableBody characterData={characterData} removeCharacter={removeCharacter} />
+      <TableBody characterData={characterData} remove={remove} />
     </table>
   )
 }
