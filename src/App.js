@@ -80,6 +80,7 @@ class App extends Component {
                           console.log(response.data);
                           return response.data;
                        } else {
+                          console.log("delete failed");
                           return false;
                        }
                     })
